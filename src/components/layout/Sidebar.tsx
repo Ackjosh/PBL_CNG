@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Gauge, BarChart2, Menu, X } from "lucide-react";
+import { Gauge, BarChart2, Menu, X, MapPin } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 
 interface SidebarProps {
@@ -14,16 +14,17 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: Gauge },
     { name: "Analytics", href: "/analytics", icon: BarChart2 },
+    { name: "Station Portal", href: "/station", icon: MapPin },
   ];
 
   return (
     <div
       className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 bg-green-500",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
-      <div className="flex h-full flex-col bg-cng-500 text-white shadow-lg">
+      <div className="flex h-full flex-col bg-cng-600 text-white shadow-lg">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center">
             <span className="text-xl font-semibold">CNG Fuel View</span>
@@ -44,8 +45,8 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 className={cn(
                   "group flex items-center px-3 py-3 rounded-md mb-1",
                   pathname === item.href
-                    ? "bg-white/20 font-medium"
-                    : "hover:bg-white/10 transition-colors"
+                    ? "bg-cng-700/80 font-medium"
+                    : "hover:bg-cng-700/40 transition-colors"
                 )}
               >
                 <item.icon className="mr-3 h-5 w-5" />
@@ -54,7 +55,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
             ))}
           </nav>
         </div>
-        <div className="p-4 border-t border-green-600">
+        <div className="p-4 border-t border-cng-700">
           <div className="text-xs opacity-70">
             © 2024 CNG Fuel View
           </div>

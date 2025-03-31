@@ -9,6 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   sidebarOpen: boolean;
@@ -16,6 +19,20 @@ interface NavbarProps {
 }
 
 export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
+
+  const auth = getAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            console.log("User signed out successfully");
+            navigate("/");
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    };
+
   return (
     <header className="border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
@@ -29,7 +46,7 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar>
@@ -47,7 +64,11 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Log out</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
+          <SignedIn>
+            <UserButton/>
+          </SignedIn>
+          <Button onClick={handleLogout} className="bg-green-500 text-white">Sign Out</Button>
         </div>
       </div>
     </header>

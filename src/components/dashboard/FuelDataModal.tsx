@@ -72,12 +72,6 @@ export function FuelDataModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="gap-2 bg-cng-500 hover:bg-cng-600">
-          <Plus className="h-4 w-4" />
-          Add Fuel Data
-        </Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Update Fuel Data</DialogTitle>

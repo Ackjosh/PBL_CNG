@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useSignIn } from '@clerk/clerk-react';
-import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../../firebase";
+import { useState } from "react";
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card";
@@ -9,36 +9,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useNavigate } from 'react-router-dom';
 
-function SignIn() {
-    const { isLoaded, signIn, setActive } = useSignIn();
+
+const auth = getAuth(app);
+
+function signIn() {
     const [emailAddress, setEmailAddress] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    if (!isLoaded) {
-        return null;
-    }
-
-    async function submit(e) {
+    const signInUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const result = await signIn.create({
-                identifier: emailAddress,
-                password,
-            });
-            
-            if (result.status === "complete") {
-                await setActive({ session: result.createdSessionId });
-                navigate("/dashboard");
-            }
-        } catch (error) {
-            console.error("Sign in error:", error);
-            setError("Invalid email or password. Please try again.");
-        }
-    }
+
+        signInWithEmailAndPassword(auth, emailAddress, password).then((value) => {
+            navigate("/dashboard");
+        }).catch((err) => {
+            setError(err.message);
+            console.log(err.message);
+        })
+    };
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
@@ -53,7 +45,7 @@ function SignIn() {
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
-                    <form onSubmit={submit} className="space-y-4">
+                    <form onSubmit={signInUser} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input id="email" type="email" value={emailAddress} onChange={(e) => setEmailAddress(e.target.value)} required />
@@ -67,7 +59,7 @@ function SignIn() {
                                 </Button>
                             </div>
                         </div>
-                        <Button type="submit" className="w-full">Sign In</Button>
+                        <Button type="submit" className="w-full" onClick={signInUser}>Sign In</Button>
                     </form>
                 </CardContent>
                 <CardFooter className="flex justify-center">
@@ -75,7 +67,7 @@ function SignIn() {
                 </CardFooter>
             </Card>
         </div>
-    );
+    )
 }
 
-export default SignIn;
+export default signIn
