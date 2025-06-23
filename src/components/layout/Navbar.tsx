@@ -37,16 +37,17 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
     <header className="border-b bg-white shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
-          <button
+          {/* <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="lg:mr-2 text-gray-700 hover:text-gray-900"
           >
             <Menu className="h-6 w-6" />
+
             <span className="sr-only">Toggle sidebar</span>
-          </button>
+          </button> */}
         </div>
-        <div className="flex items-center gap-2">
-          {/* <DropdownMenu>
+        {/* <div className="flex items-center gap-2">
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar>
@@ -64,12 +65,12 @@ export function Navbar({ sidebarOpen, setSidebarOpen }: NavbarProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Log out</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
           <SignedIn>
             <UserButton/>
           </SignedIn>
           <Button onClick={handleLogout} className="bg-green-500 text-white">Sign Out</Button>
-        </div>
+        </div> */}
       </div>
     </header>
   );

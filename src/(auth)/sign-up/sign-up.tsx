@@ -3,6 +3,7 @@ import { app } from "../../firebase";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { updateDoc} from "firebase/firestore";
 
 import {
     Card,
@@ -33,6 +34,7 @@ const SignUp = () => {
     const [stationName, setStationName] = useState("");
     const [location, setLocation] = useState<LocationData | null>(null);
     const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+    const [fuelLevel , setFuelLevel] = useState(0);
 
     const navigate = useNavigate();
 
@@ -76,19 +78,20 @@ const SignUp = () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-    
-            // Save additional user details in Firestore
+
             await setDoc(doc(db, "users", user.uid), {
                 email: email,
                 username: username,
                 stationName: stationName,
                 createdAt: new Date(),
-                latitude: location.latitude,  // ✅ Now location is guaranteed to be defined
-                longitude: location.longitude
+                latitude: location.latitude,
+                longitude: location.longitude,
+                fuelLevel: 65,
+                password: password
             });
     
             console.log("User created and data stored:", user.uid);
-            navigate("/dashboard");
+            navigate("/station");
         } catch (error) {
             setErrorMessage(error.message);
             console.error("Error signing up:", error.message);

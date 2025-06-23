@@ -25,7 +25,7 @@ function signIn() {
         e.preventDefault();
 
         signInWithEmailAndPassword(auth, emailAddress, password).then((value) => {
-            navigate("/dashboard");
+            navigate("/station");
         }).catch((err) => {
             setError(err.message);
             console.log(err.message);

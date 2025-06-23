@@ -12,8 +12,6 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = location.pathname;
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: Gauge },
-    { name: "Analytics", href: "/analytics", icon: BarChart2 },
     { name: "Station Portal", href: "/station", icon: MapPin },
   ];
 
@@ -57,7 +55,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </div>
         <div className="p-4 border-t border-cng-700">
           <div className="text-xs opacity-70">
-            © 2024 CNG Fuel View
+            © 2025 CNG Fuel View
           </div>
         </div>
       </div>

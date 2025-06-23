@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { updateDoc} from "firebase/firestore";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,12 +14,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
 
 export default function StationPortal() {
   const [fuelLevel, setFuelLevel] = useState(65);
   const [note, setNote] = useState("");
   const [stationName, setStationName] = useState("");
   const auth = getAuth();
+  const navigate = useNavigate();
   const db = getFirestore();
 
   useEffect(() => {
@@ -35,7 +38,6 @@ export default function StationPortal() {
     fetchStationName();
   }, [auth, db]);
 
-  // Sample station data - would come from API in real implementation
 //   const stationData = {
 //     id: "station-001",
 //     name: "CNG Station - Downtown",
@@ -44,7 +46,6 @@ export default function StationPortal() {
 //     lastUpdated: new Date().toLocaleString(),
 //   };
 
-  // Sample historical data - would come from API in real implementation
   const weeklyData = [
     { day: "Mon", level: 85 },
     { day: "Tue", level: 78 },
@@ -64,17 +65,36 @@ export default function StationPortal() {
     { time: "4 PM", level: fuelLevel },
   ];
 
-  const handleUpdateFuel = () => {
-    // Here you would send the data to your API
-    console.log("Updating fuel level to:", fuelLevel, "Note:", note);
-    
-    toast({
-      title: "Fuel data updated",
-      description: `${stationName} fuel level updated to ${fuelLevel}%`,
-    });
-    
-    setNote("");
+  const handleUpdateFuel = async () => {
+    const user = auth.currentUser;
+  
+    if (user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+  
+        await updateDoc(docRef, {
+          fuelLevel: fuelLevel,
+          lastUpdated: new Date(),
+          note: note.trim() || null,
+        });
+  
+        toast({
+          title: "Fuel data updated",
+          description: `${stationName} fuel level updated to ${fuelLevel}%`,
+        });
+  
+        setNote("");
+      } catch (error) {
+        toast({
+          title: "Update failed",
+          description: "There was an error updating the fuel data.",
+          variant: "destructive",
+        });
+        console.error("Error updating document:", error);
+      }
+    }
   };
+  
 
   return (
     <DashboardLayout>
@@ -260,11 +280,11 @@ export default function StationPortal() {
                 </div>
               </div>
               
-              <div className="pt-2">
-                <Button variant="outline" className="w-full">
+              {/* <div className="pt-2">
+                <Button variant="outline" className="w-full" onClick={() => navigate("/settings")}>
                   Manage Station Settings
                 </Button>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>
